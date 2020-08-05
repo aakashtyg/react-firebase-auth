@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { auth } from './firebase';
+import { auth, createUserDocument } from './firebase';
 
 class Singup extends Component {
   state = { displayName: '', email: '', password: '' };
@@ -12,13 +12,14 @@ class Singup extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = this.state;
+    const { email, password, displayName } = this.state;
     try {
       const { user } = await auth.createUserWithEmailAndPassword(
         email,
         password
       );
       console.log(user);
+      await createUserDocument(user, { displayName });
     } catch (error) {
       console.log('error', error);
     }
